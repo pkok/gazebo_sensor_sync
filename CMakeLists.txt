@@ -16,4 +16,7 @@ include_directories(${OGRE_INCLUDE_DIR} ${OGRE_Paging_INCLUDE_DIR} ${Boost_INCLU
 link_directories(${GAZEBO_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})
 
 add_library(sensor_sync SHARED sensor_sync.cc)
-target_link_libraries(sensor_sync ${GAZEBO_libraries})
+target_link_libraries(sensor_sync ${GAZEBO_LIBRARIES} ImuSensorPlugin gazebo_client)
+
+add_library(minimal_imu_plugin SHARED minimal_imu_plugin.cc)
+target_link_libraries(minimal_imu_plugin ${GAZEBO_LIBRARIES} ImuSensorPlugin)
