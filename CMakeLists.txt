@@ -18,5 +18,12 @@ link_directories(${GAZEBO_LIBRARY_DIRS} ${Boost_LIBRARY_DIRS})
 add_library(sensor_sync SHARED sensor_sync.cc)
 target_link_libraries(sensor_sync ${GAZEBO_LIBRARIES} ImuSensorPlugin gazebo_client)
 
-add_library(minimal_imu_plugin SHARED minimal_imu_plugin.cc)
-target_link_libraries(minimal_imu_plugin ${GAZEBO_LIBRARIES} ImuSensorPlugin)
+#add_library(minimal_imu_plugin SHARED minimal_imu_plugin.cc)
+#target_link_libraries(minimal_imu_plugin ${GAZEBO_LIBRARIES} ImuSensorPlugin)
+
+add_executable(listener listener.cc)
+target_link_libraries(listener ${GAZEBO_LIBRARIES} gazebo_client)
+
+
+add_library(pose_publisher SHARED pose_publisher.cc)
+target_link_libraries(pose_publisher ${GAZEBO_LIBRARIES})
