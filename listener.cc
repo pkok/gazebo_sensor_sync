@@ -20,7 +20,7 @@ int main(int, char**)
     return EXIT_FAILURE;
   }
 
-  SyncedBuffer sync_buffer("/tmp/output.protobuf");
+  SyncedBuffer sync_buffer("/tmp/my.protobuf");
 
   gazebo::transport::NodePtr node(new gazebo::transport::Node());
   node->Init();
@@ -28,7 +28,6 @@ int main(int, char**)
     = node->Subscribe(std::string("~/camimu/base_link/imu/imu"),
                       &SyncedBuffer::buffer<0, ImuType>, 
                       &sync_buffer, true);
-  /*
   gazebo::transport::SubscriberPtr cam_sub 
     = node->Subscribe(std::string("~/camimu/base_link/camera/image"),
                       &SyncedBuffer::buffer<1, ImageType>,
@@ -37,10 +36,11 @@ int main(int, char**)
     = node->Subscribe(std::string("~/pose/local/info"),
                       &SyncedBuffer::buffer<2, PoseType>,
                       &sync_buffer, true);
-                      */
 
   while (true)
     gazebo::common::Time::MSleep(10);
+  /*
+  */
 
   gazebo::client::shutdown();
   return EXIT_SUCCESS;

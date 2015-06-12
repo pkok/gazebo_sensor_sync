@@ -7,8 +7,11 @@
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 
 #include <algorithm>
+#include <map>
 #include <tuple>
 #include <utility> 
+
+#include <iostream>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -20,7 +23,6 @@ class SyncBuffer
   public:
     SyncBuffer(std::string filename) 
       : freshness(sizeof...(MsgTypes), false)
-      //: fresh_buffer_imu(false), fresh_buffer_camera(false), fresh_buffer_pose(false)
     {
       open_file(filename);
     }
@@ -42,7 +44,10 @@ class SyncBuffer
 
     virtual void open_file(std::string filename) 
     {
-      int logfile_descriptor = open(filename.c_str(), O_WRONLY | O_TRUNC);
+      int logfile_descriptor 
+        = open(filename.c_str(), 
+               O_WRONLY | O_CREAT | O_TRUNC,
+               S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
       logfile = new google::protobuf::io::FileOutputStream(logfile_descriptor);
       logfile->SetCloseOnDelete(true);
     }
@@ -57,8 +62,8 @@ class SyncBuffer
       if (buffer_policy()) {
         for_each(data, 
                  std::bind(&SyncBuffer<MsgTypes...>::write_element,
-                 &*this, 
-                 std::placeholders::_1));
+                           &*this, 
+                           std::placeholders::_1));
         logfile->Flush();
         freshness = std::vector<bool>(sizeof...(MsgTypes), false);
         return true;
